@@ -1,0 +1,10 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+app_parse_books_command:
+    path: '/admin/parse-books'
+    controller: 'src\Command\ParseBooksCommand::__invoke'
+    methods: ['GET']

@@ -1,0 +1,118 @@
+{% extends "layouts/admin.html.twig" %}
+
+{% block content %}
+
+    <h1>Обновление книги</h1>
+
+    {{ form_start(form, {'attr': {'class': 'form-horizontal', 'enctype': 'multipart/form-data'}}) }}
+        <div class="form-group">
+            <label class="col-sm-2 control-label">{{ form_label(form.title) }}</label>
+            <div class="col-sm-10">{{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}</div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">{{ form_label(form.isbn) }}</label>
+            <div class="col-sm-10">{{ form_widget(form.isbn, {'attr': {'class': 'form-control'}}) }}</div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">{{ form_label(form.pageCount) }}</label>
+            <div class="col-sm-10">{{ form_widget(form.pageCount, {'attr': {'class': 'form-control'}}) }}</div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">{{ form_label(form.publishedDate) }}</label>
+            <div class="col-sm-10">{{ form_widget(form.publishedDate, {'attr': {'class': 'form-control'}}) }}</div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">{{ form_label(form.thumbnailUrl) }}</label>
+            <div class="col-sm-10">{{ form_widget(form.thumbnailUrl, {'attr': {'class': 'form-control'}}) }}</div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">{{ form_label(form.shortDescription) }}</label>
+            <div class="col-sm-10">{{ form_widget(form.shortDescription, {'attr': {'class': 'form-control'}}) }}</div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">{{ form_label(form.longDescription) }}</label>
+            <div class="col-sm-10">{{ form_widget(form.longDescription, {'attr': {'class': 'form-control'}}) }}</div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">{{ form_label(form.status) }}</label>
+            <div class="col-sm-10">{{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}</div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Authors</label>
+            <div class="col-sm-10">
+                <input type="text" name="authors" id="authors" placeholder="Add author(s)" class="form-control" autocomplete="off" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Categories</label>
+            <div class="col-sm-10">
+                <input type="text" name="categories" id="categories" placeholder="Add category(es)" class="form-control" autocomplete="off" />
+            </div>
+        </div>
+
+        <div class="form-group mt-3">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-success">Обновить</button>
+            </div>
+        </div>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+
+    <a href="{{ path('admin_book_index') }}">Назад к списку</a>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/tagify.js') }}"></script>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const authorsInput = document.getElementById('authors');
+            const categoriesInput = document.getElementById('categories');
+
+            let authorsTagify = new Tagify(authorsInput, {
+                duplicates: false,
+                enforceWhitelist: false,
+                whitelist: [
+                    {% for author in authors %}
+                    {value: "{{ author.name|e }}", id: "{{ author.id }}"} {% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                dropdown: {
+                    enabled: 1,
+                    maxItems: 5,
+                    closeOnSelect: false
+                }
+            });
+
+            let categoriesTagify = new Tagify(categoriesInput, {
+                duplicates: false,
+                enforceWhitelist: false,
+                whitelist: [
+                    {% for category in categories %}
+                    {value: "{{ category.title|e }}", id: "{{ category.id }}"} {% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                dropdown: {
+                    enabled: 1,
+                    maxItems: 5,
+                    closeOnSelect: false
+                }
+            });
+
+            {% for author in bookAuthors %}
+            authorsTagify.addTags("{{ author.name }}");
+            {% endfor %}
+
+            {% for category in bookCategories %}
+            categoriesTagify.addTags("{{ category.title }}");
+            {% endfor %}
+
+        });
+
+    </script>
+{% endblock %}

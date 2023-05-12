@@ -1,0 +1,24 @@
+{% extends "layouts/main.html.twig" %}
+
+{% block content %}
+
+    <h1>Книги автора "{{ author.name }}"</h1>
+
+    {% if books is empty %}
+        <p>Нет книг с данным автором.</p>
+    {% else %}
+        <ul>
+            {% for book in books %}
+                <li><a href="{{ path('book_show', {'id': book.id}) }}">{{ book.title }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <a href="{{ path('book_index') }}">Назад к списку</a>
+
+{% endblock %}
+
+
+
+
+

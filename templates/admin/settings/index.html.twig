@@ -1,0 +1,35 @@
+{% extends "layouts/admin.html.twig" %}
+
+{% block content %}
+
+    <h1>Settings</h1>
+
+    <form id="update-books-source-form" method="post">
+        <label for="source_url">Enter a new source URL:</label>
+        <input class="w-100 mt-2" type="text" id="source_url" name="sourceUrl" value="{{ sourceUrl }}">
+        <div class="d-flex justify-content-start mt-2">
+            <button href="{{ path('admin_settings_parse_url') }}" class="btn btn-primary m-1" type="submit">Update</button>
+{#            <button type="button" onclick="sendCommand()" class="btn btn-primary m-1">Parse</button>#}
+        </div>
+    </form>
+
+{% endblock %}
+
+{% block javascripts %}
+
+{#    <script>#}
+{#        function sendCommand() {#}
+{#            var xml = new XMLHttpRequest();#}
+{#            xml.open('POST', '{{ path('admin_settings_parse_books') }}', true);#}
+{#            xml.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');#}
+{#            xml.onreadystatechange = function() {#}
+{#                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {#}
+{#                    console.log(this.responseText);#}
+{#                }#}
+{#            };#}
+{#            // xml.send("command=my_command");#}
+{#            xml.send(new FormData(document.getElementById('update-books-source-form')));#}
+{#        }#}
+{#    </script>#}
+
+{% endblock %}

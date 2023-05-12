@@ -1,0 +1,50 @@
+{% extends "layouts/main.html.twig" %}
+
+{% block content %}
+
+    <h1>Наши лучшие книги</h1>
+    <div class="card-group">
+        <div class="row" style="margin: 10px auto;">
+        {% for book in books %}
+            <div class="col-4">
+                <div class="card m-1">
+                    <img class="card-img-top" src="{{ asset('images/books/' ~ book.thumbnailUrl) }}" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{{ path('book_show', {'id': book.id}) }}">{{ book.title }}</a></h5>
+                        <p class="card-text">{{ book.shortDescription }}</p>
+                        <table>
+                            <tbody>
+                            <tr>
+                                <td class="align-top"><strong>Categories</strong></td>
+                                <td>
+                                    <ul>
+                                        {% for category in book.categories %}
+                                            <li><a href="{{ path('books_by_category', {'id': category.id}) }}">{{ category.title }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="align-top"><strong>Authors</strong></td>
+                                <td>
+                                    <ul>
+                                        {% for author in book.authors %}
+                                            <li><a href="{{ path('books_by_author', {'id': author.id}) }}">{{ author.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted"><data>{{ book.publishedDate|date('Y-m-d') }}</data></small>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
+

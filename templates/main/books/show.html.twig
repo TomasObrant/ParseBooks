@@ -1,0 +1,58 @@
+{% extends "layouts/main.html.twig" %}
+
+{% block content %}
+
+    <div class="row mt-3">
+        <div class="col-md-3">
+            <img src="{{ asset('images/books/' ~ book.thumbnailUrl) }}" alt="Book cover" class="img-fluid" style="width: 100%">
+        </div>
+        <div class="col-md-9">
+            <h2>{{ book.title }}</h2>
+            <p class="text-muted"> Авторы: </p>
+            <hr>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td><strong>Publication Date</strong></td>
+                    <td>{{ book.isbn }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Pages</strong></td>
+                    <td>{{ book.pageCount }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Published Date</strong></td>
+                    <td>{{ book.publishedDate|date('Y-m-d') }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Description</strong></td>
+                    <td>{{ book.longDescription }}</td>
+                </tr>
+                <tr>
+                    <td class="align-top"><strong>Categories</strong></td>
+                    <td>
+                        <ul>
+                            {% for category in categories %}
+                                <li>{{ category.title }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="align-top"><strong>Authors</strong></td>
+                    <td>
+                        <ul>
+                            {% for author in authors %}
+                                <li>{{ author.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <a href="{{ path('book_index') }}">Назад к списку</a>
+
+{% endblock %}
