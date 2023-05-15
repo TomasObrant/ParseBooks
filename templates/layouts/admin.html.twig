@@ -24,14 +24,17 @@
         </button>
         <div class="w-100"></div>
         <div class="navbar-nav">
+            <a class="nav-link d-flex m-2" href="{{ path('admin_message_index') }}">
+                <div class="m-1">Message</div>
+            </a>
+        </div>
+        <div class="navbar-nav">
             <a class="nav-link d-flex m-2" href="{{ path('admin_settings_index') }}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings align-text-bottom" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a2 2 0 0 0 1.22-1.84l.44-3.55a1 1 0 0 0-.26-.82l-2.25-2.25a1 1 0 0 0-.82-.26l-3.55.44a2 2 0 0 0-1.84 1.22l-1.43 3.05a1 1 0 0 0 .29 1.25l2.25 2.24a1 1 0 0 0 1.25.29l3.05-1.43z"></path></svg>
                 <div class="m-1">Settings</div>
             </a>
         </div>
         <div class="navbar-nav">
             <a class="nav-link d-flex m-2" href="{{ path('app_logout') }}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out align-text-bottom" aria-hidden="true"><path d="M9 18h6a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H9"></path><polyline points="12 15 9 12 12 9"></polyline><line x1="2" y1="12" x2="10" y2="12"></line></svg>
                 <div class="m-1">Logout</div>
             </a>
         </div>

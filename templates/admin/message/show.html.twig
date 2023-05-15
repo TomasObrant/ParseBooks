@@ -1,0 +1,56 @@
+{% extends "layouts/admin.html.twig" %}
+
+{% block content %}
+
+    <div class="row mt-3">
+        <div class="col-md-9">
+            <h2>{{message.theme }}</h2>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td><strong>Имя</strong></td>
+                    <td>{{ message.name }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Email</strong></td>
+                    <td>{{ message.email }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Дата сообщения</strong></td>
+                    <td>{{ message.createdAt|date('d.m.Y H:i:s') }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Сообщение</strong></td>
+                    <td>{{ message.message }}</td>
+                </tr>
+                {% if message.answer is not null %}
+                    <tr>
+                        <td><strong>Ответ на сообщение</strong></td>
+                        <td>{{ message.answer }}</td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if message_sent is defined and message_sent %}
+        <div class="alert alert-success">
+            Ваше сообщение отправлено!
+        </div>
+    {% endif %}
+
+    {% if message.answer is null %}
+        <form method="POST">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Ответ</label>
+                <div class="col-sm-10"><input name="message" class="form-control" type="text"></div>
+            </div>
+            <button type="submit" class="btn btn-primary">Отправить</button>
+        </form>
+    {% endif %}
+
+    <a href="{{ path('admin_message_index') }}">Назад к списку</a>
+
+{% endblock %}
+

@@ -19,22 +19,13 @@
                 </div>
             </div>
         </form>
-
-        <form>
-            <select name="limit" onchange="this.form.submit()">
-                <option value="9" {% if app.request.query.get('limit') == 9 %}selected{% endif %}>9</option>
-                <option value="18" {% if app.request.query.get('limit') == 18 %}selected{% endif %}>18</option>
-                <option value="27" {% if app.request.query.get('limit') == 27 %}selected{% endif %}>27</option>
-                <option value="all" {% if app.request.query.get('limit') == 'all' %}selected{% endif %}>All</option>
-            </select>
-        </form>
     </div>
     <div class="card-group">
         <div class="row" style="margin: 10px auto;">
-        {% for book in pagination %}
+        {% for book in books %}
             <div class="col-4">
                 <div class="card m-1 h-100">
-                    <img class="card-img-top" style="min-height: 450px;" src="{{ asset('images/books/' ~ book.thumbnailUrl) }}" alt="">
+                    <img class="card-img-top" style="min-height: 450px;" src="{{ asset('images/books/' ~ book.thumbnailUrl) }}" alt="{{ asset('images/books/none.jpg') }}">
                     <div class="card-body">
                         <h5 class="card-title"><a href="{{ path('book_show', {'id': book.id}) }}">{{ book.title }}</a></h5>
                         <p class="card-text">{{ book.shortDescription }}</p>
@@ -71,7 +62,8 @@
         {% endfor %}
         </div>
     </div>
-    {{ knp_pagination_render(pagination, 'pagination/pagination.html.twig') }}
+
+    <a href="{{ path('book_index') }}">Назад к списку</a>
 
 {% endblock %}
 

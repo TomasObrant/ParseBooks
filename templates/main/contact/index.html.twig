@@ -1,0 +1,46 @@
+{% extends "layouts/main.html.twig" %}
+
+{% block content %}
+
+    <h1>Свяжитесь с нами</h1>
+
+    {% if form_errors(form) %}
+        <div class="alert alert-danger">
+            {{ form_errors(form) }}
+        </div>
+    {% endif %}
+
+    {% if message_sent is defined and message_sent %}
+        <div class="alert alert-success">
+            Ваше сообщение отправлено!
+        </div>
+    {% endif %}
+
+    <form method="POST">
+        {{ form_start(form) }}
+
+        <div class="form-group">
+            {{ form_label(form.name, "Ваше имя") }}
+            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.email, "Ваш email") }}
+            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.theme, "Тема сообщения") }}
+            {{ form_widget(form.theme, {'attr': {'class': 'form-control'}}) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.message, "Сообщение") }}
+            {{ form_widget(form.message, {'attr': {'class': 'form-control'}}) }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Отправить</button>
+        {{ form_end(form) }}
+    </form>
+
+{% endblock %}

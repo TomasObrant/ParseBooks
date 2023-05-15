@@ -1,0 +1,54 @@
+{% extends "layouts/admin.html.twig" %}
+
+{% block content %}
+
+    <h1>Сообщения</h1>
+
+    <form action="{{ path('admin_message_delete') }}" method="post">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>-</th>
+                <th>Имя</th>
+                <th>Email</th>
+                <th>Сообщение</th>
+                <th>Время отправки</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for message in messages %}
+                <tr style="background-color: {% if not message.isRead %}#3b82f6{% elseif message.answer is not null %}#dde6f8{% else %}#7cabff{% endif %}">
+                    <td><input type="checkbox" name="ids[]" value="{{ message.id }}" class="form-check-input"></td>
+                    <td>{{ message.id }}</td>
+                    <td>{{ message.theme }}</td>
+                    <td>{{ message.createdAt|date('d.m.Y H:i:s') }}</td>
+                    <td><a href="{{ path('admin_message_show', {'id': message.id}) }}" class="btn btn-primary">View</a></td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">Нет сообщений</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-danger">Удалить выбранные</button>
+    </form>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        // Выбрать все элементы checkbox при нажатии на checkbox "Выбрать все"
+        $('#select-all').click(function(event) {
+            if(this.checked) {
+                $(':checkbox').each(function() {
+                    this.checked = true;
+                });
+            } else {
+                $(':checkbox').each(function() {
+                    this.checked = false;
+                });
+            }
+        });
+    </script>
+{% endblock %}
