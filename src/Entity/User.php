@@ -58,6 +58,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $fd = null;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
@@ -302,6 +305,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAvatar(?string $avatar): self
     {
         $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    public function getFd(): ?int
+    {
+        return $this->fd;
+    }
+
+    public function setFd(?int $fd): self
+    {
+        $this->fd = $fd;
 
         return $this;
     }

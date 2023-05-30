@@ -42,23 +42,31 @@ class WebSocketServerCommand extends Command
 
         $server = new Server("0.0.0.0", 9502);
 
-        $server->on("Start", function(Server $server) use ($output) {
-            $output->writeln("OpenSwoole WebSocket Server is started at http://127.0.0.1:9502");
+        $connections = [];
+
+        $server->on("Start", function() use ($output) {
+            $output->writeln("Swoole WebSocket Server started at http://127.0.0.1:9501\n");
         });
 
-        $server->on('Open', function(Server $server, Request $request) use ($output) {
-            $output->writeln("connection open: {$request->fd}");
+        $server->on('Open', function(Server $server, Request $request) use ($output, &$connections) {
+            $chatId = $request->get['chat_id'];
+            $userId = $request->get['user_id'];
+
+            if ($this->isUserInChat($userId, $chatId)) {
+                $connections[$request->fd] = $userId;
+                $output->writeln("connection open: {$request->fd}, user_id: {$userId}");
+            }
         });
 
-        $server->on('Message', function(Server $server, Frame $frame) use ($output){
+        $server->on('Message', function(Server $server, Frame $frame) use ($output, &$connections){
 
             $output->writeln("received message: {$frame->data}");
             $data = json_decode($frame->data, true);
 
-            if ($data['type'] === 'message') {
+            $chatId = $data['chat_id'];
+            $userId = $connections[$frame->fd] ?? null;
 
-                $chatId = $data['chat_id'];
-                $userId = $data['user_id'];
+            if ($this->isUserInChat($userId, $chatId)) {
                 $message = $data['message'];
 
                 $newMessage = new ChatMessage();
@@ -75,21 +83,40 @@ class WebSocketServerCommand extends Command
                 $this->entityManager->persist($chat);
                 $this->entityManager->flush();
 
-                foreach ($server->connections as $fd) {
-                    $server->push($fd, json_encode([$message, $userId, time()]));
+                foreach ($connections as $fd => $userId) {
+                    if ($this->isUserInChat($userId, $chatId)) {
+                        $server->push($fd, json_encode([$message, $userId, time()]));
+                    }
                 }
             }
         });
 
-        $server->on('Close', function(Server $server, int $fd) use ($output) {
+        $server->on('Close', function(Server $server, int $fd) use ($output, &$connections) {
             $output->writeln("connection close: {$fd}");
+            unset($connections[$fd]);
         });
 
-        $server->on('Disconnect', function(Server $server, int $fd) use ($output) {
+        $server->on('Disconnect', function(Server $server, int $fd) use ($output, &$connections) {
             $output->writeln("connection disconnect: {$fd}");
+            foreach ($connections as $fd => $userId) {
+                $server->disconnect($fd);
+            }
         });
 
         $server->start();
+    }
+
+    private function isUserInChat(mixed $userId, mixed $chatId)
+    {
+        $chat = $this->entityManager->getRepository(Chat::class)->find($chatId);
+
+        $chatUsers = $chat->getUser();
+        foreach ($chatUsers as $chatUser) {
+            $chatUserID = $chatUser->getId();
+            if ($chatUserID == $userId) {
+                return true;
+            }
+        }
     }
 
 }

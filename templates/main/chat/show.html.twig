@@ -50,7 +50,7 @@
         });
 
 
-        let ws = new WebSocket("ws://localhost:9502");
+        let ws = new WebSocket("ws://localhost:9502?chat_id=" + {{ chat.id }} + "&user_id=" + {{ app.user.id }});
 
         ws.onmessage = function(event) {
             let message = JSON.parse(event.data);
@@ -70,6 +70,10 @@
             container.scrollTop = container.scrollHeight;
         }
 
+        ws.onopen = function(event) {
+
+        }
+
         let messageForm = document.querySelector("#message-form");
 
         messageForm.addEventListener("submit", function(event) {
@@ -79,7 +83,7 @@
                 ws.send(JSON.stringify({
                     type: "message",
                     chat_id: {{ chat.id }},
-                    user_id: "{{ app.user.id }}",
+                    user_id: {{ app.user.id }},
                     message: message
                 }));
                 document.querySelector("#message").value = "";
