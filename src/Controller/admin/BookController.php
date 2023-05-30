@@ -10,6 +10,7 @@ use App\Repository\BookRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -45,9 +46,10 @@ class BookController extends AbstractController
     }
 
     #[Route('admin/books/create', name: 'admin_book_create', methods: ['GET', 'POST'])]
-    public function create(ManagerRegistry $doctrine, Request $request): Response
+    public function create(ManagerRegistry $doctrine, Request $request, EventDispatcherInterface $dispatcher, EventDispatcherInterface $eventDispatcher): Response
     {
         $book = new Book();
+
         $form = $this->createForm(BookType::class, $book);
         $form->handleRequest($request);
 
@@ -200,4 +202,6 @@ class BookController extends AbstractController
         return $this->redirectToRoute('admin_book_index');
     }
 }
+
+
 

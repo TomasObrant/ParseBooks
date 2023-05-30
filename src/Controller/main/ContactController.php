@@ -3,7 +3,6 @@
 namespace App\Controller\main;
 
 use App\Entity\Message;
-use App\Form\ContactFormType;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,39 +11,39 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
+
 
 class ContactController extends AbstractController
 {
     #[Route('/contact', name: 'contact_index', methods: ['GET', 'POST'])]
-    public function index(Request $request, MailerInterface $mailer, EntityManagerInterface $entityManager): Response
+    public function index(UserInterface $user, Request $request, MailerInterface $mailer, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(ContactFormType::class);
+        phpinfo();
+
         $message_sent = false;
 
-        $form->handleRequest($request);
+        if ($request->getMethod() == 'POST') {
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+            $data = $request->request->all();
+            $date = new DateTimeImmutable();
 
             $message = new Message();
-            $message->setName($data['name']);
             $message->setTheme($data['theme']);
-            $message->setEmail($data['email']);
             $message->setMessage($data['message']);
-            $message->setCreatedAt(new DateTimeImmutable());
+            $message->setCreatedAt($date);
+            $message->setUser($user);
 
             $entityManager->persist($message);
             $entityManager->flush();
-
             $email = (new Email())
-                ->from($data['email'])
+                ->from($user->getEmail())
                 ->to('dimkl2411@gmail.com')
                 ->subject('Сообщение с сайта')
                 ->text(sprintf(
-                    'Имя: %s\nEmail: %s\Дата:\n%sСообщение:\n%s',
-                    $data['name'],
+                    'Тема: %s\nДата:\n%sСообщение:\n%s',
                     $data['theme'],
-                    $data['email'],
+                    $date->format('Y-m-d H:i:s'),
                     $data['message'],
                 ));
 
@@ -53,7 +52,6 @@ class ContactController extends AbstractController
         }
 
         return $this->render('main/contact/index.html.twig', [
-            'form' => $form->createView(),
             'message_sent' => $message_sent,
         ]);
     }

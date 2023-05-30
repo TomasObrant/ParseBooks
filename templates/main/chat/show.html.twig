@@ -1,0 +1,91 @@
+{% extends "layouts/main.html.twig" %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card mb-3">
+                    <div class="card-body" id="chat-messages" style="height: 400px; overflow-y: auto;">
+                        {% for chatMessage in chat.messages %}
+                            {% if chatMessage.user.id == app.user.id %}
+                                <div class="row justify-content-end">
+                                    <div class="col-md-6">
+                                        <div class="card bg-secondary text-light mb-3">
+                                            <div class="card-body">
+                                                {{ chatMessage.getCreatedAt|date('H:i:s') }} - {{ chatMessage.message }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card bg-light mb-3">
+                                            <div class="card-body">
+                                                {{ chatMessage.getCreatedAt|date('H:i:s') }} - {{ chatMessage.message }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                        <div class="wrapper_Scrollbottom"></div>
+                    </div>
+                    <div class="card-footer">
+                        <form id="message-form" name="publish">
+                            <textarea class="form-control" id="message" rows="3" name="message"></textarea>
+                            <input type="submit" class="btn btn-primary mt-1" value="Send">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            let container = document.getElementById('chat-messages');
+            container.scrollTop = container.scrollHeight;
+        });
+
+
+        let ws = new WebSocket("ws://localhost:9502");
+
+        ws.onmessage = function(event) {
+            let message = JSON.parse(event.data);
+            let messages = document.getElementById("chat-messages");
+            let time = new Date().toLocaleTimeString();
+
+            window.currentUser = {{ app.user.id }};
+
+            if ( window.currentUser == message[1]) {
+                messages.innerHTML = messages.innerHTML + '<div class="row justify-content-end"><div class="col-md-6"><div class="card bg-secondary text-light mb-3"><div class="card-body">' + time + ' - ' + message[0] + '</div></div></div></div>';
+            } else {
+                messages.innerHTML = messages.innerHTML + '<div class="row"><div class="col-md-6"><div class="card bg-light mb-3"><div class="card-body">' + time + ' - ' + message[0] + '</div></div></div></div>';
+            }
+
+
+            let container = document.getElementById('chat-messages');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        let messageForm = document.querySelector("#message-form");
+
+        messageForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+            let message = document.querySelector("#message").value.trim();
+            if (message) {
+                ws.send(JSON.stringify({
+                    type: "message",
+                    chat_id: {{ chat.id }},
+                    user_id: "{{ app.user.id }}",
+                    message: message
+                }));
+                document.querySelector("#message").value = "";
+            }
+        });
+    </script>
+
+{% endblock %}
+

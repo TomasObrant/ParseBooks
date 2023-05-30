@@ -9,6 +9,7 @@
         "bootstrap": "^5.2.3",
         "core-js": "^3.23.0",
         "jquery": "^3.6.4",
+        "node": "^18.16.0",
         "regenerator-runtime": "^0.13.9",
         "sass": "^1.62.1",
         "sass-loader": "^13.0.0",
@@ -25,6 +26,8 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "@yaireo/tagify": "^4.17.8"
+        "@yaireo/tagify": "^4.17.8",
+        "jest-worker": "^29.5.0",
+        "socket.io": "^4.6.1"
     }
 }

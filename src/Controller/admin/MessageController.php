@@ -2,9 +2,8 @@
 
 namespace App\Controller\admin;
 
-use App\Command\ParseBooksCommand;
 use App\Entity\Message;
-use App\Form\ContactFormType;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,15 +33,21 @@ class MessageController extends AbstractController
         $message->setIsRead(true);
         $message_sent = false;
 
+        $user = $message->getUser();
+        $messages = $user->getMessages();
+
         if ($request->getMethod() == 'POST') {
+            $date = new DateTimeImmutable();
             $email = (new Email())
                 ->from('dimkl2411@gmail.com')
-                ->to($message->getEmail())
+                ->to($user->getEmail())
                 ->subject("Ответ на сообщение")
                 ->text(sprintf(
-                    'Сообщение:\n%sEmail: %s\n',
+                    'Сообщение:\n%sEmail: %s\nДата: %s\n',
                     $request->request->get('message'),
-                    'dimkl2411@gmail.com'
+                    'dimkl2411@gmail.com',
+                    $date->format('Y-m-d H:i:s'),
+
                 ));
             $message->setAnswer($request->request->get('message'));
 
@@ -55,7 +60,7 @@ class MessageController extends AbstractController
         $entityManager->flush();
 
         return $this->render('admin/message/show.html.twig', [
-            'message' => $message,
+            'messages' => $messages,
             'message_sent' => $message_sent,
         ]);
     }

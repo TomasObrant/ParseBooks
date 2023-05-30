@@ -5,6 +5,9 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     book_images_directory: '%kernel.project_dir%/public/images/books'
+    telegram_bot_token: '6105444296:AAHe1kNDtwCYjKAEo8UQEm9iSGkYwYeTt2I'
+    telegram_chat_id: '908714473'
+    websocket_port: 9502
 
 services:
     # default configuration for services in *this* file
@@ -23,8 +26,20 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-    app.form.type.product:
-        class: App\Form\ProductType
-        arguments: [ "@doctrine.orm.entity_manager" ]
-        tags:
-            - { name: form.type }
+#    app.form.type.product:
+#        class: App\Form\ProductType
+#        arguments: [ "@doctrine.orm.entity_manager" ]
+#        tags:
+#            - { name: form.type }
+
+#    App\EventListener\TelegramNotificationListener:
+#        arguments:
+#            $httpClient: '@http_client'
+#            $botToken: '%telegram_bot_token%'
+#            $chatId: '%telegram_chat_id%'
+#        tags:
+#            - { name: kernel.event_listener, event: 'App\Event\NewBookEvent::NAME', method: 'onNewBook' }
+
+#    App\Server\ChatWebSocketServer:
+#        arguments: [ '@doctrine', '%websocket_port%' ]
+

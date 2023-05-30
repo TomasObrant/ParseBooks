@@ -1,0 +1,48 @@
+{% extends "layouts/main.html.twig" %}
+
+{% block content %}
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="{{ asset('images/users/' ~ user.avatar|default('none.jpg')) }}" class="card-img-top" alt="avatar">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ user.email }}</h5>
+                        <p class="card-text">{{ user.email }}</p>
+{#                        {{ path('fos_user_profile_edit') }}#}
+{#                        <a href="#" class="btn btn-primary">Edit profile</a>#}
+{#                        <a href="{{ path('create_chat', {'userId': otherUser.id}) }}">Начать чат</a>#}
+                        <a href="{{ path('chat_find', {'id': user.id}) }}" class="btn btn-primary">Write a message</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Profile details</h4>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-group">
+                                    <li class="list-group-item"><strong>First name:</strong> {{ user.firstname|default('') }}</li>
+                                    <li class="list-group-item"><strong>Last name:</strong> {{ user.lastname|default('') }}</li>
+                                    <li class="list-group-item"><strong>Phone:</strong> {{ user.phone|default('') }}</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-group">
+                                    <li class="list-group-item"><strong>Address:</strong> {{ user.address|default('') }}</li>
+                                    <li class="list-group-item"><strong>City:</strong> {{ user.city|default('') }}</li>
+                                    <li class="list-group-item"><strong>Country:</strong> {{ user.country|default('') }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

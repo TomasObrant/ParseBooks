@@ -71,6 +71,7 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
+    .addEntry('socketio', './node_modules/socket.io/client-dist/socket.io.js')
 ;
 
 module.exports = Encore.getWebpackConfig();

@@ -1,0 +1,30 @@
+{% extends "layouts/main.html.twig" %}
+
+{% block content %}
+
+    <h1>Список чатов</h1>
+    <ul class="list-group">
+        {% for chat in chats %}
+            <li class="list-group-item" style="background-color: {{ chat.getLatestMessage().getUser() == user ? '#d9edf7' : '#f2dede' }}">
+                <a href="{{ path('chat_show', {'id': chat.id}) }}">
+                    {% if chat.getLatestMessage().getUser() == user %}
+                        <strong>Вы:</strong> {{ chat.getLatestMessage().getMessage() }}
+                    {% else %}
+                        <strong>{{ chat.getLatestMessage().getUser().getEmail }}:</strong> {{ chat.getLatestMessage().getMessage() }}
+                    {% endif %}
+                </a>
+                <span class="badge badge-light">{{ chat.getLatestMessage().getCreatedAt|date('d.m.Y H:i') }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+
+{#    {% for chat in chats %}#}
+{#        <div class="chat-item {% if chat.getLatestMessage().getUser() == user %}bg-primary{% else %}bg-secondary{% endif %}">#}
+{#            <a href="{{ path('chat_show', {'id': chat.getId()}) }}">#}
+{#                <h5>Chat {{ chat.getId() }}</h5>#}
+{#                <p>Latest message: {{ chat.getLatestMessage().getMessage() }}</p>#}
+{#            </a>#}
+{#        </div>#}
+{#    {% endfor %}#}
+
+{% endblock %}

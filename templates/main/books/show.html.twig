@@ -55,4 +55,32 @@
 
     <a href="{{ path('book_index') }}">Назад к списку</a>
 
+    <h2>Comments</h2>
+
+    {% if comments|length > 0 %}
+        <ul>
+            {% for comment in comments %}
+                <li>
+                    {{ comment.authorEmail }} at {{ comment.createdAt|date('d.m.Y H:i') }}:
+                    {{ comment.text }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No comments yet.</p>
+    {% endif %}
+
+    <h2>Add comment</h2>
+    <form action="{{ path('comment_create') }}" method="post">
+        <div>
+            <label for="authorEmail">Your email:</label>
+            <input type="email" id="authorEmail" name="authorEmail" required>
+        </div>
+        <div>
+            <label for="text">Comment:</label>
+            <textarea id="text" name="text" required></textarea>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+
 {% endblock %}
